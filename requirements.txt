@@ -2,3 +2,4 @@ falcon
 requests
 waitress
 jinja2
+markupsafe

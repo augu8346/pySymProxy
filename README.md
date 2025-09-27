@@ -41,26 +41,42 @@ Due to Microsoft not explicitly allowing redistribution od the `dbghelp.dll` fil
 ### Installation
 1. To run the server (port 5001), you can run `run_server.bat` in the root folder of the repository.
 
-### Run As Windows Service
-To run pySymProxy as a Windows Service, you can use [NSSM (Non-Sucking Service Manager)](https://nssm.cc/):
+### Run As Windows Service using WinSW
+To run pySymProxy as a Windows Service, you can use [WinSW](https://github.com/winsw/winsw). WinSW is a simple wrapper that allows any executable to run as a Windows service.
 
-1. Download and extract NSSM.
-2. Open a command prompt as Administrator.
-3. Run the following command to install the service:
-  ```
-  nssm install pySymProxy
-  ```
-4. In the NSSM dialog:
-  - Set the **Application** path to your Python executable (e.g., `<path>\python.exe`).
-  - Set the **Arguments** to the script that starts the server (e.g., `run_server.py`).
-  - Set the **Startup directory** to the root of your repository.
-5. Click **Install service**.
+1. Download the latest `WinSW.exe` from the [WinSW releases page](https://github.com/winsw/winsw/releases).
+2. Rename `WinSW.exe` to `pySymProxyService.exe` and place it in the root folder of the repository.
+3. Create a configuration file named `pySymProxyService.xml` in the same folder. Example:
 
-You can now start and stop the service using the Windows Services manager or with:
-```
-nssm start pySymProxy
-nssm stop pySymProxy
-```
+  ```xml
+  <service>
+    <id>pySymProxy</id>
+    <name>pySymProxy Service</name>
+    <description>Microsoft Symbol Proxy server implemented in Python</description>
+    <executable>python</executable>
+    <arguments>run_server.py</arguments>
+    <logpath>.\logs</logpath>
+    <log mode="roll-by-size">
+    <sizeThreshold>10240</sizeThreshold>
+    <keepFiles>8</keepFiles>
+    </log>
+  </service>
+  ```
+
+4. Open a command prompt as Administrator and run:
+
+  ```
+  pySymProxyService.exe install
+  ```
+
+5. Start the service:
+
+  ```
+  pySymProxyService.exe start
+  ```
+
+Refer to the [WinSW documentation](https://github.com/winsw/winsw/blob/main/doc/xml-config-file.md) for advanced configuration options.
+
 
 ### Client configuration
 Developers PC's should be configured to reference the pySymProxy service by setting an environment variable on their machine to the following:

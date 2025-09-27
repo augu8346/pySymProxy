@@ -36,17 +36,19 @@ class RequestStatistics:
         self.serverHits = {}
 
     def recordServerHit(self, server):
-        counter = self.serverHits.get(server.identifer(), None)
+        sid = server.identifier()
+        counter = self.serverHits.get(sid, None)
         if counter is None:
             counter = AtomicCounter()
-            self.serverHits[server.identifer()] = counter
+            self.serverHits[sid] = counter
         counter.increment()
 
     def recordServerMiss(self, server):
-        counter = self.serverMisses.get(server.identifer(), None)
+        sid = server.identifier()
+        counter = self.serverMisses.get(sid, None)
         if counter is None:
             counter = AtomicCounter()
-            self.serverMisses[server.identifer()] = counter
+            self.serverMisses[sid] = counter
         counter.increment()
 
     def encodeJSON(self):

@@ -16,4 +16,5 @@ class TestHandler:
             resp.content_type = "application/octet-stream"
 
         except Exception as e:
-            resp.body = "error: " + str(e)
+            resp.text = "error: " + str(e)
+            resp.content_type = "text/plain"

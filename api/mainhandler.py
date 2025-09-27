@@ -53,13 +53,13 @@ class MainHandler:
             elif (file.endswith(".log")):
                 return self.on_get_logfile(req, resp, file)
         except Exception as e:
-            resp.body = "error: " + str(e)
+            resp.text = "error: " + str(e)
 
     def on_get_index(self, req, resp):
         diskUsage = 0  # sum([getFolderSize(server.get("cacheLocation", None)) for server in self._config.servers()])
         diskUsage += getFolderSize(self._config.cacheLocation())
         self._template = env.get_template('main.html.jinja')
-        resp.body = self._template.render(
+        resp.text = self._template.render(
             serverName=self._config.name(),
             admin=self._config.administrator(),
             clientConfig=self._config.sympath(),
@@ -69,13 +69,14 @@ class MainHandler:
             diskUsage=diskUsage,
             logfiles=self._config.logfiles()
         )
-        resp.content_type = "html"
+
+        resp.content_type = "text/html"
 
     def on_get_config(self, req, resp):
         configLocation = self._config.configFile()
         resp.stream = open(configLocation, 'rb')
         resp.stream_len = os.path.getsize(configLocation)
-        resp.content_type = "json"
+        resp.content_type = "application/json"
 
     def on_get_statistics(self, req, resp):
         # Build a dictionary of information to send
@@ -85,16 +86,16 @@ class MainHandler:
         stats.diskUsage += getFolderSize(self._config.cacheLocation())
         stats.numAcceptedRequests = stats.numRequests.value - stats.numExcluded.value
 
-        resp.data = JsonEncoder().encode(stats)
-        resp.content_type = "json"
+        resp.text = JsonEncoder().encode(stats)
+        resp.content_type = "application/json"
 
     def on_get_symbols(self, req, resp):
         # Build a dictionary of information to send
         # Serialise it and send
         symbols = self._statistics.getSymbols()
 
-        resp.data = JsonEncoder().encode(symbols)
-        resp.content_type = "json"
+        resp.text = JsonEncoder().encode(symbols)
+        resp.content_type = "application/json"
 
     def on_get_logfile(self, req, resp, file):
         # Get the list of log files
@@ -104,4 +105,4 @@ class MainHandler:
         logLocation = logfiles[logIndex - 1]
         resp.stream = open(logLocation, 'rb')
         resp.stream_len = os.path.getsize(logLocation)
-        resp.content_type = "text"
+        resp.content_type = "text/plain"

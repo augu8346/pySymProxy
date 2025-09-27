@@ -80,7 +80,8 @@ class SymbolHandler:
 
         except Exception as e:
             logging.error("{}".format(str(e)))
-            resp.body = "404 could not find requested file.\nError: " + str(e)
+            resp.text = "404 could not find requested file.\nError: " + str(e)
+            resp.content_type = "text/plain"
             resp.status = falcon.HTTP_404
 
         self._statistics.endRequest(statRecord, file, identifier, symbolLocation, cacheHit, excluded, valid,

@@ -36,22 +36,39 @@ This sounded like the perfect reason to setup a SymProxy as described by the Mic
 
 ---
 ## Configuration
-### Installation
-Make sure you are running windows and have Python 2.7 or 3+ installed.
-You can clone this repository into a folder on the windows machine.
-To run the server, you can run `run_server.bat` in the root folder of the repository.
-This will run a server on the machine on port 8080.
-`run_server.bat` can be configured as a service on the machine so it automatically starts when the machine reboots. A search online can help with this configuration.
-
 Due to Microsoft not explicitly allowing redistribution od the `dbghelp.dll` files anymore, I can't have them committed directly into the repository. But I can point you to the place to get them: [Debugging Tools for Windows](https://developer.microsoft.com/en-us/windows/hardware/windows-driver-kit). Simply copy/paste the x86 `dbghelp.dll` and `symsrv.dll` to the `dbghelp` directory of the repository. 
+
+### Installation
+1. To run the server (port 5001), you can run `run_server.bat` in the root folder of the repository.
+
+### Run As Windows Service
+To run pySymProxy as a Windows Service, you can use [NSSM (Non-Sucking Service Manager)](https://nssm.cc/):
+
+1. Download and extract NSSM.
+2. Open a command prompt as Administrator.
+3. Run the following command to install the service:
+  ```
+  nssm install pySymProxy
+  ```
+4. In the NSSM dialog:
+  - Set the **Application** path to your Python executable (e.g., `<path>\python.exe`).
+  - Set the **Arguments** to the script that starts the server (e.g., `run_server.py`).
+  - Set the **Startup directory** to the root of your repository.
+5. Click **Install service**.
+
+You can now start and stop the service using the Windows Services manager or with:
+```
+nssm start pySymProxy
+nssm stop pySymProxy
+```
 
 ### Client configuration
 Developers PC's should be configured to reference the pySymProxy service by setting an environment variable on their machine to the following:
-`srv*C:\Symbols*http://pysymproxy.company.local:8080/symbols.`
+`srv*%LOCALAPPDATA%\Temp\SymbolCache*http://pysymproxy.company.local:5001/symbols.`
 
 ### Checking the status of the server
 At any time navigate to the base address of the server in a web browser.
-Such as: `http://pysymproxy.company.local:8080/`
+Such as: `http://pysymproxy.company.local:5001/`
 
 ### Configuration files
 When starting, the server will attempt to load a configuration file.

@@ -3,7 +3,7 @@
     "name": "PySymProxy - Default configuration",
     "host": "localhost",
     "administrator": "!enter your contact details!",
-    "default_sympath": "srv*c:\\symbols*http://localhost:8080/symbols"
+    "default_sympath": "srv*%LOCALAPPDATA%\\Temp\\SymbolCache*http://localhost:5001/symbols"
   },
   "general": {
     "enableStatistics": true,
@@ -20,7 +20,7 @@
     {
       "name": "Microsoft symbol server",
       "identifier": "mss",
-      "remote": "http://msdl.microsoft.com/download/symbols",
+      "remote": "https://msdl.microsoft.com/download/symbols",
       "cacheLocation": "\\\\build-server\\mssymbols",
       "retryTimout": 600,
       "maxRequests": 10

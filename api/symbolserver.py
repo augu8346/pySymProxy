@@ -79,5 +79,9 @@ class SymbolServer:
         self._previousResults[recordId] = newRecord
         return newRecord.location, False, True
 
-    def identifer(self):
+    # Backwards-compatible accessor for the server identifier
+    def identifier(self):
         return self._identifier
+
+    # Temporary shim to support older code paths referencing the misspelled name
+    identifer = identifier
